@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories - Expense Tracker</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="background">
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+</div>
+<div class="overlay"></div>
+<div class="dashboard">
+    <div class="header">
+        <div class="header-title">
+            <i class="fas fa-tags"></i>
+            <h1>Categories</h1>
+        </div>
+    </div>
+    <div class="summary-container">
+        <div class="summary-card">
+            <h3><i class="fas fa-list"></i> Total Categories</h3>
+            <p th:text="${categories.size()} + ' Categories'">5 Categories</p>
+        </div>
+    </div>
+    <div class="recent-expenses">
+        <h3><i class="fas fa-tag"></i> All Categories</h3>
+        <ul class="expense-list">
+            <li class="expense-item" th:each="category : ${categories}">
+                <div class="expense-details">
+                    <div class="expense-icon" th:style="'background:' + ${category.color}">
+                        <i class="fas fa-tag"></i>
+                    </div>
+                    <div class="expense-info">
+                        <h4 th:text="${category.name}">Food</h4>
+                        <p th:text="${category.description}">Groceries and dining out</p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <a th:href="@{/categories/edit/{id}(id=${category.id})}" class="btn btn-outline">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a th:href="@{/categories/delete/{id}(id=${category.id})}" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Delete
+                    </a>
+                </div>
+            </li>
+        </ul>
+        <a th:href="@{/categories/add}" class="view-all">Add New Category</a>
+    </div>
+</div>
+</body>
+</html>

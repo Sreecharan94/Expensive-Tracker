@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Expense Tracker</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background-color: #081b33;
+            overflow: hidden;
+        }
+
+        .bg-shape {
+            position: absolute;
+            background: rgba(96, 43, 165, 0.2);
+            border-radius: 50%;
+        }
+
+        .shape-1 {
+            width: 600px;
+            height: 600px;
+            top: -200px;
+            right: -200px;
+            background: radial-gradient(circle, rgba(76, 29, 149, 0.6) 0%, rgba(30, 64, 175, 0.3) 70%);
+        }
+
+        .shape-2 {
+            width: 500px;
+            height: 500px;
+            bottom: -150px;
+            left: -100px;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.6) 0%, rgba(30, 64, 175, 0.3) 70%);
+        }
+
+        .shape-3 {
+            width: 300px;
+            height: 300px;
+            top: 40%;
+            left: 30%;
+            background: radial-gradient(circle, rgba(76, 29, 149, 0.4) 0%, rgba(30, 64, 175, 0.1) 70%);
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(76, 23, 145, 0.8), rgba(20, 99, 214, 0.7));
+            z-index: -1;
+        }
+
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-1000px) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .register-card {
+            width: 100%;
+            max-width: 480px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+
+        .register-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .logo i {
+            font-size: 32px;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: 600;
+            font-size: 24px;
+        }
+
+        .register-form .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .register-form .input-group i {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            color: #5e6caa;
+        }
+
+        .register-form input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .register-form input:focus {
+            outline: none;
+            border-color: #4c56c9;
+            box-shadow: 0 0 0 3px rgba(76, 86, 201, 0.2);
+            background-color: #fff;
+        }
+
+        .register-form button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .register-form button:hover {
+            background: linear-gradient(135deg, #5d0fb5, #1e5db9);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 117, 252, 0.4);
+        }
+
+        .register-form button:active {
+            transform: translateY(0);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 15px;
+            color: #666;
+        }
+
+        .login-link a {
+            color: #4c56c9;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .login-link a:hover {
+            color: #2575fc;
+            text-decoration: underline;
+        }
+
+        .card-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #777;
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            margin: 0 auto 25px;
+            width: 100%;
+            height: 8px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-step {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            border-radius: 10px;
+        }
+
+        .strength-meter {
+            height: 5px;
+            width: 100%;
+            margin-top: 5px;
+            background-color: #f0f0f0;
+            border-radius: 3px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .strength-meter div {
+            height: 100%;
+            width: 0;
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+
+        .strength-text {
+            font-size: 12px;
+            color: #888;
+            text-align: right;
+            margin-top: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="background">
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+</div>
+<div class="overlay"></div>
+<div class="particles" id="particles-js"></div>
+
+<div class="container">
+    <div class="register-card">
+        <div class="logo">
+            <i class="fas fa-wallet fa-3x"></i>
+        </div>
+        <h2>Create Your Account</h2>
+        <div class="progress-bar">
+            <div class="progress-step"></div>
+        </div>
+        <form th:action="@{/register}" method="post" th:object="${user}" class="register-form">
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" th:field="*{username}" placeholder="Username" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" th:field="*{email}" placeholder="Email Address" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-id-card"></i>
+                <input type="text" th:field="*{fullName}" placeholder="Full Name" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" th:field="*{password}" id="password" placeholder="Password" required>
+                <div class="strength-meter">
+                    <div id="strength-bar"></div>
+                </div>
+                <div class="strength-text" id="strength-text"></div>
+            </div>
+            <button type="submit">Create Account</button>
+        </form>
+        <div class="login-link">
+            <p>Already have an account? <a th:href="@{/login}">Login here</a></p>
+        </div>
+        <div class="card-footer">
+            <p>Start tracking your expenses today</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Create animated particles in the background
+    document.addEventListener('DOMContentLoaded', function() {
+        const particlesContainer = document.getElementById('particles-js');
+
+        // Create 50 particles
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+
+            // Random size between 5px and 20px
+            const size = Math.random() * 15 + 5;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+
+            // Random position
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+
+            // Random delay
+            particle.style.animationDelay = `${Math.random() * 20}s`;
+
+            // Random duration between 15s and 30s
+            particle.style.animationDuration = `${Math.random() * 15 + 15}s`;
+
+            particlesContainer.appendChild(particle);
+        }
+
+        // Password strength meter
+        const passwordInput = document.getElementById('password');
+        const strengthBar = document.getElementById('strength-bar');
+        const strengthText = document.getElementById('strength-text');
+        const strengthMeter = document.querySelector('.strength-meter');
+
+        if (passwordInput) {
+            passwordInput.addEventListener('input', function() {
+                const password = passwordInput.value;
+
+                if (password.length > 0) {
+                    strengthMeter.style.display = 'block';
+                    strengthText.style.display = 'block';
+
+                    // Simple password strength calculation
+                    let strength = 0;
+
+                    // Length check
+                    if (password.length > 7) strength += 25;
+
+                    // Contains lowercase
+                    if (/[a-z]/.test(password)) strength += 25;
+
+                    // Contains uppercase
+                    if (/[A-Z]/.test(password)) strength += 25;
+
+                    // Contains number or special char
+                    if (/[0-9!@#$%^&*]/.test(password)) strength += 25;
+
+                    // Update UI
+                    strengthBar.style.width = strength + '%';
+
+                    if (strength < 25) {
+                        strengthBar.style.backgroundColor = '#ff4d4d';
+                        strengthText.textContent = 'Weak';
+                    } else if (strength < 50) {
+                        strengthBar.style.backgroundColor = '#ffa64d';
+                        strengthText.textContent = 'Fair';
+                    } else if (strength < 75) {
+                        strengthBar.style.backgroundColor = '#ffff4d';
+                        strengthText.textContent = 'Good';
+                    } else {
+                        strengthBar.style.backgroundColor = '#4CAF50';
+                        strengthText.textContent = 'Strong';
+                    }
+                } else {
+                    strengthMeter.style.display = 'none';
+                    strengthText.style.display = 'none';
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

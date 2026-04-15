@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Expense - Expense Tracker Pro</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* White text for main form elements */
+        .form-container,
+        .form-group label,
+        .form-help,
+        .char-counter,
+        input,
+        select,
+        textarea,
+        .select-arrow,
+        .file-upload-text,
+        .currency-symbol,
+        option {
+            color: white !important;
+        }
+
+        /* Style for input fields to make them visible against dark background */
+        input,
+        select,
+        textarea {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        /* Form group layout - labels beside inputs */
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            width: 150px;
+            margin-right: 15px;
+            text-align: right;
+        }
+
+        .form-group .input-with-icon,
+        .form-group .select-wrapper,
+        .form-group input,
+        .form-group select,
+        .form-group textarea,
+        .form-group .file-upload {
+            flex: 1;
+        }
+
+        /* Full width fields */
+        .form-group.full-width {
+            display: block;
+        }
+
+        .form-group.full-width label {
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin-bottom: 8px;
+        }
+
+        /* Dark theme for Recent Expenses and Back button */
+        .recent-expenses,
+        .btn-outline {
+            color: inherit !important; /* Revert to default dark theme colors */
+        }
+
+        .recent-expenses h3,
+        .recent-expenses .expense-name,
+        .recent-expenses .expense-category,
+        .recent-expenses .expense-amount,
+        .recent-expenses .view-all,
+        .btn-outline {
+            color: inherit !important;
+        }
+
+        /* Style for file upload area */
+        .file-upload-label {
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body>
+<div class="background">
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+</div>
+<div class="overlay"></div>
+
+<div class="dashboard">
+    <!-- Navigation Bar -->
+    <nav class="top-nav">
+        <a href="/dashboard" class="nav-item" aria-label="Dashboard"><i class="fas fa-home"></i> <span class="nav-text">Dashboard</span></a>
+        <a href="/expenses" class="nav-item" aria-label="Expenses"><i class="fas fa-list"></i> <span class="nav-text">Expenses</span></a>
+        <a href="/expenses/add" class="nav-item active" aria-label="Add Expense"><i class="fas fa-plus-circle"></i> <span class="nav-text">Add Expense</span></a>
+        <a href="/reports" class="nav-item" aria-label="Reports"><i class="fas fa-chart-pie"></i> <span class="nav-text">Reports</span></a>
+        <div class="nav-user">
+            <i class="fas fa-user-circle"></i>
+            <span class="nav-text" th:text="${#authentication.principal.username}"></span>
+        </div>
+    </nav>
+
+    <div class="header">
+        <div class="header-title">
+            <i class="fas fa-wallet"></i>
+            <h1>Add New Expense</h1>
+        </div>
+        <div class="page-actions">
+            <a href="/dashboard" class="btn btn-outline">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="content-container">
+        <div class="form-container card">
+            <form th:action="@{/expenses/add}" method="post" class="expense-form" id="expenseForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name">
+                            <i class="fas fa-tag"></i> Expense Name
+                        </label>
+                        <input type="text" id="name" name="name" placeholder="e.g. Groceries, Uber ride" required
+                               aria-describedby="nameHelp">
+                        <small id="nameHelp" class="form-help">Be specific for better tracking</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="amount">
+                            <i class="fas fa-dollar-sign"></i> Amount
+                        </label>
+                        <div class="input-with-icon">
+                            <span class="currency-symbol">$</span>
+                            <input type="number" step="0.01" id="amount" name="amount" placeholder="0.00" required
+                                   min="0.01" max="100000" aria-describedby="amountHelp">
+                        </div>
+                        <small id="amountHelp" class="form-help">Enter the total amount</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">
+                            <i class="fas fa-folder"></i> Category
+                        </label>
+                        <div class="select-wrapper">
+                            <select id="category" name="category" required aria-describedby="categoryHelp">
+                                <option value="" disabled selected>Select a category</option>
+                                <option value="Food">Food & Dining</option>
+                                <option value="Transport">Transportation</option>
+                                <option value="Shopping">Shopping</option>
+                                <option value="Housing">Housing</option>
+                                <option value="Bills">Bills & Utilities</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Health">Health & Medical</option>
+                                <option value="Education">Education</option>
+                                <option value="Travel">Travel</option>
+                                <option value="Gifts">Gifts & Donations</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <i class="fas fa-chevron-down select-arrow"></i>
+                        </div>
+                        <small id="categoryHelp" class="form-help">Select the most relevant category</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="date">
+                            <i class="fas fa-calendar"></i> Date
+                        </label>
+                        <input type="date" id="date" name="date" required aria-describedby="dateHelp">
+                        <small id="dateHelp" class="form-help">When did this expense occur?</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="paymentMethod">
+                            <i class="fas fa-credit-card"></i> Payment Method
+                        </label>
+                        <div class="select-wrapper">
+                            <select id="paymentMethod" name="paymentMethod" aria-describedby="paymentHelp">
+                                <option value="" selected>Select payment method</option>
+                                <option value="Cash">Cash</option>
+                                <option value="Credit Card">Credit Card</option>
+                                <option value="Debit Card">Debit Card</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                                <option value="Digital Wallet">Digital Wallet</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <i class="fas fa-chevron-down select-arrow"></i>
+                        </div>
+                        <small id="paymentHelp" class="form-help">How did you pay?</small>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="notes">
+                            <i class="fas fa-sticky-note"></i> Notes (Optional)
+                        </label>
+                        <textarea id="notes" name="notes" placeholder="Add any additional details about this expense"
+                                  aria-describedby="notesHelp" maxlength="500"></textarea>
+                        <small id="notesHelp" class="form-help">Max 500 characters</small>
+                        <div class="char-counter"><span id="charCount">0</span>/500</div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>
+                            <i class="fas fa-receipt"></i> Receipt (Optional)
+                        </label>
+                        <div class="file-upload">
+                            <input type="file" id="receipt" name="receipt" accept="image/*,.pdf"
+                                   aria-describedby="receiptHelp">
+                            <label for="receipt" class="file-upload-label">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span class="file-upload-text">Choose a file or drag it here</span>
+                            </label>
+                        </div>
+                        <small id="receiptHelp" class="form-help">Upload receipt (JPG, PNG or PDF)</small>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="reset" class="btn btn-outline">
+                        <i class="fas fa-undo"></i> Clear Form
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus-circle"></i> Add Expense
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="sidebar">
+            <div class="quick-tips card">
+                <h3><i class="fas fa-lightbulb"></i> Quick Tips</h3>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> Categorize correctly to improve your financial reports</li>
+                    <li><i class="fas fa-check-circle"></i> Add detailed notes for better expense tracking</li>
+                    <li><i class="fas fa-check-circle"></i> Set the correct date, even for past expenses</li>
+                    <li><i class="fas fa-check-circle"></i> Upload receipts for important purchases</li>
+                    <li><i class="fas fa-check-circle"></i> Track payment methods to understand spending habits</li>
+                </ul>
+            </div>
+
+            <div class="recent-expenses card">
+                <h3><i class="fas fa-history"></i> Recent Expenses</h3>
+                <div class="expense-list" id="recentExpenses">
+                    <!-- This would be populated dynamically in a real app -->
+                    <div class="expense-item">
+                        <div class="expense-icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <div class="expense-details">
+                            <div class="expense-name">Dinner at Italian Restaurant</div>
+                            <div class="expense-meta">
+                                <span class="expense-category">Food & Dining</span>
+                                <span class="expense-amount">$45.20</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="expense-item">
+                        <div class="expense-icon">
+                            <i class="fas fa-gas-pump"></i>
+                        </div>
+                        <div class="expense-details">
+                            <div class="expense-name">Gas Station</div>
+                            <div class="expense-meta">
+                                <span class="expense-category">Transportation</span>
+                                <span class="expense-amount">$32.50</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a href="/expenses" class="view-all">View All Expenses <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="dashboard-footer">
+        <p>&copy; 2025 Expense Tracker Pro | <a href="/privacy">Privacy Policy</a> | <a href="/terms">Terms of Service</a> | <a href="/help">Help Center</a></p>
+    </footer>
+</div>
+
+<script>
+    // Set default date to today
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set default date
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('date').value = today;
+
+        // Character counter for notes
+        const notes = document.getElementById('notes');
+        const charCount = document.getElementById('charCount');
+
+        notes.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+        });
+
+        // Form validation
+        const form = document.getElementById('expenseForm');
+        form.addEventListener('submit', function(e) {
+            const amount = parseFloat(document.getElementById('amount').value);
+            if (amount <= 0) {
+                alert('Please enter a valid amount greater than 0');
+                e.preventDefault();
+            }
+        });
+
+        // File upload styling
+        const fileInput = document.getElementById('receipt');
+        const fileUploadText = document.querySelector('.file-upload-text');
+
+        fileInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                fileUploadText.textContent = this.files[0].name;
+            } else {
+                fileUploadText.textContent = 'Choose a file or drag it here';
+            }
+        });
+
+        // Drag and drop for file upload
+        const fileUploadLabel = document.querySelector('.file-upload-label');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            fileUploadLabel.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            fileUploadLabel.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            fileUploadLabel.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+            fileUploadLabel.classList.add('highlight');
+        }
+
+        function unhighlight() {
+            fileUploadLabel.classList.remove('highlight');
+        }
+
+        fileUploadLabel.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            fileInput.files = files;
+            fileUploadText.textContent = files[0].name;
+        }
+    });
+</script>
+<script src="/js/scripts.js"></script>
+</body>
+</html>

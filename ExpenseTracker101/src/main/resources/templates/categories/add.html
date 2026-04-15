@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Category - Expense Tracker</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="background">
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+</div>
+<div class="overlay"></div>
+<div class="dashboard">
+    <div class="header">
+        <div class="header-title">
+            <i class="fas fa-tags"></i>
+            <h1>Add New Category</h1>
+        </div>
+    </div>
+    <div class="form-container">
+        <form th:action="@{/categories/add}" method="post" class="category-form">
+            <div class="form-group">
+                <label for="name">Category Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter category name" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="3" placeholder="Enter description"></textarea>
+            </div>
+            <button type="submit" class="btn">
+                <i class="fas fa-plus"></i> Add Category
+            </button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
