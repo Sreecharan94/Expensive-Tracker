@@ -11,8 +11,6 @@ A modern expense tracking application that helps users monitor, categorize, and 
 - [Running the Application](#running-the-application)
 - [API Endpoints](#api-endpoints)
 - [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Features
 
